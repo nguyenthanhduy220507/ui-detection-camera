@@ -1,0 +1,435 @@
+{
+  "info": {
+    "name": "Camera Surveillance API",
+    "description": "Complete API collection for Camera Surveillance System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3333",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Cameras",
+      "item": [
+        {
+          "name": "Get All Cameras",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cameras",
+              "host": ["{{base_url}}"],
+              "path": ["cameras"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Camera - Thang may 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('camera_id', jsonData.id);",
+                  "    console.log('Camera ID saved: ' + jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Thang may 1\",\n  \"rtspUrl\": \"rtsp://172.16.40.73:554/cam/realmonitor?channel=1&subtype=0\",\n  \"username\": \"admin\",\n  \"password\": \"Xincamon@!\",\n  \"location\": \"Building A - Floor 1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cameras",
+              "host": ["{{base_url}}"],
+              "path": ["cameras"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Camera - Loi vao chinh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Loi vao chinh\",\n  \"rtspUrl\": \"rtsp://192.168.1.100:554/stream1\",\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"location\": \"Main Entrance\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cameras",
+              "host": ["{{base_url}}"],
+              "path": ["cameras"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Camera By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cameras/{{camera_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cameras", "{{camera_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Camera",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Thang may 1 - Updated\",\n  \"location\": \"Building A - Floor 2\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cameras/{{camera_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cameras", "{{camera_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Camera Status - Online",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"online\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cameras/{{camera_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["cameras", "{{camera_id}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Camera Status - Offline",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"offline\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cameras/{{camera_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["cameras", "{{camera_id}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Camera",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cameras/{{camera_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["cameras", "{{camera_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {
+          "name": "Get All Alerts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alerts",
+              "host": ["{{base_url}}"],
+              "path": ["alerts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Alerts By Camera ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alerts?cameraId={{camera_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["alerts"],
+              "query": [
+                {
+                  "key": "cameraId",
+                  "value": "{{camera_id}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recent Alerts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alerts/recent?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["alerts", "recent"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Alert By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alerts/{{alert_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["alerts", "{{alert_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Alert - Danger (Knife)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('alert_id', jsonData.id);",
+                  "    console.log('Alert ID saved: ' + jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cameraId\": \"{{camera_id}}\",\n  \"alertType\": \"danger\",\n  \"description\": \"Person with knife detected\",\n  \"detections\": [\n    {\n      \"objectType\": \"person\",\n      \"confidence\": 0.95,\n      \"bboxCoordinates\": {\n        \"x\": 100,\n        \"y\": 150,\n        \"width\": 200,\n        \"height\": 400\n      }\n    },\n    {\n      \"objectType\": \"knife\",\n      \"confidence\": 0.87,\n      \"bboxCoordinates\": {\n        \"x\": 150,\n        \"y\": 250,\n        \"width\": 50,\n        \"height\": 80\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/alerts",
+              "host": ["{{base_url}}"],
+              "path": ["alerts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Alert - Danger (Gun)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cameraId\": \"{{camera_id}}\",\n  \"alertType\": \"danger\",\n  \"description\": \"Person with gun detected\",\n  \"detections\": [\n    {\n      \"objectType\": \"person\",\n      \"confidence\": 0.98,\n      \"bboxCoordinates\": {\n        \"x\": 200,\n        \"y\": 100,\n        \"width\": 180,\n        \"height\": 380\n      }\n    },\n    {\n      \"objectType\": \"gun\",\n      \"confidence\": 0.92,\n      \"bboxCoordinates\": {\n        \"x\": 280,\n        \"y\": 220,\n        \"width\": 60,\n        \"height\": 40\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/alerts",
+              "host": ["{{base_url}}"],
+              "path": ["alerts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Alert - Warning (Suspicious)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cameraId\": \"{{camera_id}}\",\n  \"alertType\": \"warning\",\n  \"description\": \"Suspicious person detected\",\n  \"detections\": [\n    {\n      \"objectType\": \"person\",\n      \"confidence\": 0.89,\n      \"bboxCoordinates\": {\n        \"x\": 150,\n        \"y\": 200,\n        \"width\": 190,\n        \"height\": 410\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/alerts",
+              "host": ["{{base_url}}"],
+              "path": ["alerts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Alert",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/alerts/{{alert_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["alerts", "{{alert_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register - Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register - User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"user123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('access_token', jsonData.access_token);",
+                  "    console.log('Access token saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+
