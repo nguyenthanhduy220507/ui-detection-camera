@@ -5,6 +5,7 @@ import { CamerasModule } from './cameras/cameras.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { AuthModule } from './auth/auth.module';
 import { StreamModule } from './stream/stream.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { StreamModule } from './stream/stream.module';
     AuthModule,
     StreamModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
 

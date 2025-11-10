@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import CameraList from '@/components/CameraList';
+import CameraListTree from '@/components/CameraListTree';
 import VideoGrid from '@/components/VideoGrid';
 import RightPanel from '@/components/RightPanel';
 import { socketService } from '@/lib/socket';
@@ -57,7 +57,7 @@ export default function DashboardPage() {
       <div className="h-[calc(100vh-73px)] flex">
         {/* Left Sidebar - Camera List (20%) */}
         <div className="w-[20%] min-w-[250px] max-w-[350px]">
-          <CameraList />
+          <CameraListTree />
         </div>
 
         {/* Center - Video Grid (60%) */}

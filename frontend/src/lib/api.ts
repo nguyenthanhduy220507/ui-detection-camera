@@ -20,6 +20,15 @@ export const cameraApi = {
     api.patch(`/cameras/${id}/status`, { status }),
 };
 
+// Camera Groups API
+export const cameraGroupApi = {
+  getAll: () => api.get('/camera-groups'),
+  getTree: () => api.get('/camera-groups/tree'),
+  getOne: (id: string) => api.get(`/camera-groups/${id}`),
+  create: (data: any) => api.post('/camera-groups', data),
+  delete: (id: string) => api.delete(`/camera-groups/${id}`),
+};
+
 // Alert API
 export const alertApi = {
   getAll: (cameraId?: string) => 

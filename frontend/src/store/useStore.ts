@@ -34,6 +34,13 @@ interface StoreState {
   setCameras: (cameras: Camera[]) => void;
   setSelectedCamera: (camera: Camera | null) => void;
   
+  // Grid cameras (for multi-camera view)
+  gridCameras: Map<number, string | null>; // Map<slotIndex, cameraId>
+  selectedGridSlot: number | null;
+  setGridCamera: (slotIndex: number, cameraId: string | null) => void;
+  setSelectedGridSlot: (slotIndex: number | null) => void;
+  clearGridSlot: (slotIndex: number) => void;
+  
   // Alerts
   alerts: Alert[];
   activeAlerts: Map<string, Alert>;
@@ -62,6 +69,21 @@ export const useStore = create<StoreState>((set) => ({
   selectedCamera: null,
   setCameras: (cameras) => set({ cameras }),
   setSelectedCamera: (camera) => set({ selectedCamera: camera }),
+  
+  // Grid cameras (for multi-camera view)
+  gridCameras: new Map(),
+  selectedGridSlot: null,
+  setGridCamera: (slotIndex, cameraId) => set((state) => {
+    const newGridCameras = new Map(state.gridCameras);
+    newGridCameras.set(slotIndex, cameraId);
+    return { gridCameras: newGridCameras };
+  }),
+  setSelectedGridSlot: (slotIndex) => set({ selectedGridSlot: slotIndex }),
+  clearGridSlot: (slotIndex) => set((state) => {
+    const newGridCameras = new Map(state.gridCameras);
+    newGridCameras.delete(slotIndex);
+    return { gridCameras: newGridCameras };
+  }),
   
   // Alerts
   alerts: [],

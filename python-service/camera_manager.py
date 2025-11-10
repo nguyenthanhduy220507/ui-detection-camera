@@ -41,10 +41,14 @@ class CameraStream:
             rtsp_url = self.build_rtsp_url()
             logger.info(f"Connecting to camera {self.name} at {rtsp_url[:20]}...")
             
-            self.capture = cv2.VideoCapture(rtsp_url)
-            self.capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce latency
+            self.capture = cv2.VideoCapture(rtsp_url, cv2.CAP_FFMPEG)
             
-            # Try to read a frame to verify connection
+            # Optimize for LOW LATENCY streaming
+            self.capture.set(cv2.CAP_PROP_BUFFERSIZE, 1)        # Minimal buffer = lower latency
+            self.capture.set(cv2.CAP_PROP_FPS, 25)              # Target 25 FPS
+            self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))  # Use MJPEG if supported
+            
+            # Try to read a frame to verify connection with timeout
             ret, frame = self.capture.read()
             if ret:
                 self.is_streaming = True
@@ -70,11 +74,12 @@ class CameraStream:
         logger.info(f"Disconnected from camera {self.name}")
     
     def get_frame(self) -> Optional[Dict]:
-        """Get current frame from stream"""
+        """Get current frame from stream with minimal latency"""
         if not self.is_streaming or not self.capture:
             return None
         
         try:
+            # Always get fresh frame (no caching to reduce delay)
             ret, frame = self.capture.read()
             if not ret:
                 logger.warning(f"Failed to read frame from {self.name}")
@@ -83,11 +88,16 @@ class CameraStream:
             self.last_frame = frame
             self.last_frame_time = datetime.now()
             
-            # Resize frame for faster transmission (optional)
-            frame_resized = cv2.resize(frame, (640, 480))
+            # Resize to 640x360 (balance quality and speed)
+            frame_resized = cv2.resize(frame, (640, 360), interpolation=cv2.INTER_AREA)
             
-            # Encode frame to JPEG
-            _, buffer = cv2.imencode('.jpg', frame_resized, [cv2.IMWRITE_JPEG_QUALITY, 80])
+            # Fast JPEG encoding with optimized settings
+            encode_param = [
+                cv2.IMWRITE_JPEG_QUALITY, 70,      # Balanced quality
+                cv2.IMWRITE_JPEG_OPTIMIZE, 1,      # Optimize encoding
+                cv2.IMWRITE_JPEG_PROGRESSIVE, 0,   # Disable progressive for speed
+            ]
+            _, buffer = cv2.imencode('.jpg', frame_resized, encode_param)
             frame_base64 = base64.b64encode(buffer).decode('utf-8')
             
             return {
@@ -108,9 +118,16 @@ class CameraManager:
     def __init__(self):
         self.cameras: Dict[str, CameraStream] = {}
         
-    async def add_camera(self, name: str, rtsp_url: str, username: str, password: str) -> str:
+    async def add_camera(self, name: str, rtsp_url: str, username: str, password: str, camera_id: str = None) -> str:
         """Add a new camera and connect to it"""
-        camera_id = str(uuid.uuid4())
+        if camera_id is None:
+            camera_id = str(uuid.uuid4())
+        
+        # Check if camera already exists
+        if camera_id in self.cameras:
+            logger.warning(f"Camera {camera_id} already exists, updating connection")
+            await self.remove_camera(camera_id)
+        
         camera = CameraStream(camera_id, name, rtsp_url, username, password)
         
         success = await camera.connect()

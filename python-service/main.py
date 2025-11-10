@@ -30,6 +30,7 @@ class CameraConfig(BaseModel):
     rtsp_url: str
     username: str
     password: str
+    camera_id: Optional[str] = None
 
 
 class ConnectionTestRequest(BaseModel):
@@ -56,7 +57,8 @@ async def add_camera(config: CameraConfig):
             config.name,
             config.rtsp_url,
             config.username,
-            config.password
+            config.password,
+            config.camera_id  # Use ID from backend if provided
         )
         return {
             "status": "success",
